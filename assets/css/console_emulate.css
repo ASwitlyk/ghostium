@@ -1,0 +1,67 @@
+.code-container {
+	width: 80%;
+	height: 70%;
+	margin: 60px auto 0 auto;
+	padding: 0.4em 0.5em 0.5em 0.5em;
+	background-color: #23241F;
+	overflow-x: hidden;
+
+	font-family: Menlo Regular;
+	font-size: 1.25em;
+}
+
+/* variable name color in JS and class name color python */
+.code-white {
+	color: #f8f8f2;
+}
+
+/* yellowish color for strings */
+.code-string {
+	color: #E6DB74;
+}
+
+/* purple color for integers, etc.. */
+.code-num {
+	color: #AE81FF;
+}
+
+.code-comment {
+	color: #75715e;
+}
+
+/* function keyword is green in javascript */
+.js-function {
+	color: #66D93F;
+}
+/* Pink color */
+.code-operator {
+	color: #F92672;
+}
+
+/*  (blue color) in python name of variable or class and def colors, 
+   javascript var keyword color */
+.code-var {
+	color: #66D9EF;
+}
+
+/* Orangish color for function/class parameters */
+.code-arg {
+	color: #E5A373;
+}
+
+.code-tab {
+	width: 1em;
+	display: inline-block;
+}
+
+.code-line {
+	margin: 0;
+}
+
+.code-block {
+	display: block;
+}
+
+
+
+
