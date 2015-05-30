@@ -23,16 +23,72 @@ $(document).ready(function() {
 			'<span class="code-arg"></span>',
 			'args',
 			'<span class="code-white"></span>',
-			'):'
-		],
-
-		'javascript': [
+			'):',
 			'<span class="code-line"></span>',
 			'<span class="code-var"></span>',
 			'class ',
 			'<span class="code-white"></span>',
-			'Engin',
-			'eer():',
+			'Engineer():',
+		// two lines
+			'<span class="code-line"></span>',
+			'<span class="code-tab"></span>',
+			'<span class="code-var"></span>',
+			'def __init__',
+			'<span class="code-white"></span>',
+			'(',
+			'<span class="code-arg"></span>',
+			'self',
+			'<span class="code-white"></span>',
+			', *',
+			'<span class="code-arg"></span>',
+			'args',
+			'<span class="code-white"></span>',
+			'):'
+		],
+
+		'javascript': [
+		// one line
+			'<span class="code-line"></span>',
+			'<span class="code-var"></span>',
+			'class ',
+			'<span class="code-white"></span>',
+			'Engineer():',
+		// two lines
+			'<span class="code-line"></span>',
+			'<span class="code-tab"></span>',
+			'<span class="code-var"></span>',
+			'def __init__',
+			'<span class="code-white"></span>',
+			'(',
+			'<span class="code-arg"></span>',
+			'self',
+			'<span class="code-white"></span>',
+			', *',
+			'<span class="code-arg"></span>',
+			'args',
+			'<span class="code-white"></span>',
+			'):',
+			'<span class="code-line"></span>',
+			'<span class="code-var"></span>',
+			'class ',
+			'<span class="code-white"></span>',
+			'Engineer():',
+		// two lines
+			'<span class="code-line"></span>',
+			'<span class="code-tab"></span>',
+			'<span class="code-var"></span>',
+			'def __init__',
+			'<span class="code-white"></span>',
+			'(',
+			'<span class="code-arg"></span>',
+			'self',
+			'<span class="code-white"></span>',
+			', *',
+			'<span class="code-arg"></span>',
+			'args',
+			'<span class="code-white"></span>',
+			'):'
+			
 		]
 	};
 
@@ -147,7 +203,8 @@ $(document).ready(function() {
 			// setTimeout(codeContainerChildrenFade, 500);
 
 		}
-	}
+	} 
+	
 
 
 	// iterates through the array and parse's each array value
@@ -158,7 +215,7 @@ $(document).ready(function() {
 				return function() {
 					parseArrayItems(value, index, arr)
 				}
-			}(v, i, a), 500 + (i * intervalTime));
+			}(v, i, a), (i * intervalTime));
 		});
 	}
 
@@ -202,8 +259,7 @@ $(document).ready(function() {
 			var fadeDelay = tDelay + 4000;
 			timeoutId = setTimeout(codeContainerChildrenFade, fadeDelay);
 		}
-		// setTimeout(codeContainerChildrenFade, tDelay - (lastDelay + 2000));
-		// setTimeout(iterateCodeObj, tDelay - lastDelay + 2500);
+
 		clearTimeout(timeoutId);
 		setTimeout(codeContainerChildrenFade, tDelay - lastDelay - 1000);
 		setTimeout(iterateCodeObj, tDelay - lastDelay + 1000);

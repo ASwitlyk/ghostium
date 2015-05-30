@@ -3,11 +3,11 @@
 	height: 70%;
 	margin: 60px auto 0 auto;
 	padding: 0.4em 0.5em 0.5em 0.5em;
-	background-color: #23241F;
+	background-color: #232323;
 	overflow-x: hidden;
 
 	font-family: Menlo Regular;
-	font-size: 1.25em;
+	font-size: 1.25rem;
 }
 
 /* variable name color in JS and class name color python */
