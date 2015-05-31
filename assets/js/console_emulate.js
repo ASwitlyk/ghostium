@@ -1,97 +1,5 @@
 $(document).ready(function() {
 
-	var codeObj = {
-
-		python: [
-		// one line
-			'<span class="code-line"></span>',
-			'<span class="code-var"></span>',
-			'class ',
-			'<span class="code-white"></span>',
-			'Engineer():',
-		// two lines
-			'<span class="code-line"></span>',
-			'<span class="code-tab"></span>',
-			'<span class="code-var"></span>',
-			'def __init__',
-			'<span class="code-white"></span>',
-			'(',
-			'<span class="code-arg"></span>',
-			'self',
-			'<span class="code-white"></span>',
-			', *',
-			'<span class="code-arg"></span>',
-			'args',
-			'<span class="code-white"></span>',
-			'):',
-			'<span class="code-line"></span>',
-			'<span class="code-var"></span>',
-			'class ',
-			'<span class="code-white"></span>',
-			'Engineer():',
-		// two lines
-			'<span class="code-line"></span>',
-			'<span class="code-tab"></span>',
-			'<span class="code-var"></span>',
-			'def __init__',
-			'<span class="code-white"></span>',
-			'(',
-			'<span class="code-arg"></span>',
-			'self',
-			'<span class="code-white"></span>',
-			', *',
-			'<span class="code-arg"></span>',
-			'args',
-			'<span class="code-white"></span>',
-			'):'
-		],
-
-		'javascript': [
-		// one line
-			'<span class="code-line"></span>',
-			'<span class="code-var"></span>',
-			'class ',
-			'<span class="code-white"></span>',
-			'Engineer():',
-		// two lines
-			'<span class="code-line"></span>',
-			'<span class="code-tab"></span>',
-			'<span class="code-var"></span>',
-			'def __init__',
-			'<span class="code-white"></span>',
-			'(',
-			'<span class="code-arg"></span>',
-			'self',
-			'<span class="code-white"></span>',
-			', *',
-			'<span class="code-arg"></span>',
-			'args',
-			'<span class="code-white"></span>',
-			'):',
-			'<span class="code-line"></span>',
-			'<span class="code-var"></span>',
-			'class ',
-			'<span class="code-white"></span>',
-			'Engineer():',
-		// two lines
-			'<span class="code-line"></span>',
-			'<span class="code-tab"></span>',
-			'<span class="code-var"></span>',
-			'def __init__',
-			'<span class="code-white"></span>',
-			'(',
-			'<span class="code-arg"></span>',
-			'self',
-			'<span class="code-white"></span>',
-			', *',
-			'<span class="code-arg"></span>',
-			'args',
-			'<span class="code-white"></span>',
-			'):'
-			
-		]
-	};
-
 
 	// accepts a string to see if it starts with <span
 	function checkForSpan(str) {
@@ -117,35 +25,66 @@ $(document).ready(function() {
 		var span = $('.code-line:last');
 	}
 
-	// get text cursor
-	var txtcursor = $('#txtcursor');
-	// make cursor blink
-
-
-	function makeCursorBlink() {
-
-	}
-
-	var intervalId = setInterval(function(tc) {
-		var hidden = false;
-		return function() {
-			if(!hidden) {
-				tc.hide();
-				hidden = true;
-			} else {
-				tc.show();
-				hidden = false;
-			}
-		}
-	}(txtcursor), 500);
 
 	// forEach flags
 	var currentSpanLine = false,
 		currentInnerSpan,
 		codeContainerNode = $('.code-container'),
-		txtCursorNode = $('#txtcursor');
+		txtCursorNode = $('<span id="txtcursor" class="code-white">|</span>'),
+		blinkIntervalId = 0,
+		iterateCodeObjTimeoutId = 0,
+		// keep track of all timeout Ids for each item in array (when sent to parseArrayItems)
+		arrItemTimeoutIds = [],
+		// need to keep track of fading Ids
+		fadingTimeoutIds = [];
+
+
 
 	var intervalTime = 500;
+
+	function insertTxtCursorandBlink() {
+		codeContainerNode.html(txtCursorNode);
+		blinkIntervalId = setInterval(function(tc) {
+			var hidden = false;
+			return function() {
+				if(!hidden) {
+					tc.hide();
+					hidden = true;
+				} else {
+					tc.show();
+					hidden = false;
+				}
+			}
+		}(txtCursorNode), 500)
+	}
+
+	function clearCoverContainerStopAnimation() {
+
+		// stop blinking
+		clearInterval(blinkIntervalId);
+		// stop next Obj Iteration
+		clearTimeout(iterateCodeObjTimeoutId);
+		// stop next arr iteration
+		clearTimeout(arrTimeoutId);
+		// clear HTML from code container
+		codeContainerNode.html('')
+		// stop all timeoutsIds running for the array iteration
+		arrItemTimeoutIds.forEach(function(v, i, a) {
+			clearTimeout(v);
+		});
+		// stop all pending fading animations
+		fadingTimeoutIds.forEach(function(v, i, a) {
+			clearTimeout(v);
+		});
+		// reset fadingTimeoutIds to empty array
+		fadingTimeoutIds = [];
+
+	}
+
+	function startConsoleAnimation() {
+		insertTxtCursorandBlink();
+		iterateCodeObjTimeoutId = setTimeout(iterateCodeObj, 1000);
+	}
 
 	function addBlockToCurrentSpanLine() {
 		currentSpanLine.addClass("code-block");
@@ -206,17 +145,21 @@ $(document).ready(function() {
 	} 
 	
 
-
 	// iterates through the array and parse's each array value
 	function iterateArr(arr) {
 
+		arrItemTimeoutIds = [];
+		var currTimeoutId = 0;
+
 		arr.forEach(function(v, i, a) {
-			setTimeout(function(value, index, arr) {
+			currTimeoutId = setTimeout(function(value, index, arr) {
 				return function() {
 					parseArrayItems(value, index, arr)
 				}
 			}(v, i, a), (i * intervalTime));
+			arrItemTimeoutIds.push(currTimeoutId);
 		});
+		console.log(arrItemTimeoutIds);
 	}
 
 	// global variable to store the last delay time so that
@@ -225,12 +168,14 @@ $(document).ready(function() {
 	var lastDelay = 0;
 	var firstTime = true;
 
+	var arrTimeoutId = 0;
+
 	// will delay the running of the iterateArr function
 	function delayArrIteration(arr, delay) {
 		// need to add time after first time run to allow for fadeaway on next array iteration
 		var delay = firstTime ? delay : delay + 6000
 		firstTime = false;
-		setTimeout(iterateArr, delay, arr);
+		arrTimeoutId = setTimeout(iterateArr, delay, arr);
 		// setTimeout(codeContainerChildrenFade, delay + 500);
 		var addToDelay = (arr.length - 1) * intervalTime;
 		var delayTime = delay + addToDelay;
@@ -252,22 +197,27 @@ $(document).ready(function() {
 	// will iterate through the global codeObj JSON object
 	// and when done, run itself again after a delay
 	function iterateCodeObj() {
-		var timeoutId;
+		var lastFadeId;
 		var tDelay = 0;
 		for(key in codeObj) {
 			tDelay += delayArrIteration(codeObj[key], tDelay);
 			var fadeDelay = tDelay + 4000;
-			timeoutId = setTimeout(codeContainerChildrenFade, fadeDelay);
+			lastFadeId = setTimeout(codeContainerChildrenFade, fadeDelay);
+			fadingTimeoutIds.push(lastFadeId);
 		}
 
-		clearTimeout(timeoutId);
-		setTimeout(codeContainerChildrenFade, tDelay - lastDelay - 1000);
-		setTimeout(iterateCodeObj, tDelay - lastDelay + 1000);
+		clearTimeout(lastFadeId);
+		lastFadeId = setTimeout(codeContainerChildrenFade, tDelay - lastDelay + 4000);
+		fadingTimeoutIds.push(lastFadeId);
+		iterateCodeObjTimeoutId = setTimeout(iterateCodeObj, tDelay - lastDelay + 6000);
 		firstTime = true;
 	}
 
-	// iterate the code Object
-	setTimeout(iterateCodeObj, 10);
+
+	window.onfocus = startConsoleAnimation;
+	window.onblur = clearCoverContainerStopAnimation;
+	startConsoleAnimation();
+
 
 }); // end of document.ready
 
